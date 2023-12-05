@@ -38,11 +38,48 @@ export const barData = [
   },
 ];
 
-export const GET_CHECKERS = gql`
-  query GET_CHECKERS {
-    employees_aggregate {
+export const pieData = [
+  {
+    id: 1,
+    year: 2020,
+    sales: 20000,
+  },
+  {
+    id: 2,
+    year: 2021,
+    sales: 30000,
+  },
+];
+
+export const GET_USERS = gql`
+  query GET_USERS {
+    user_aggregate {
       aggregate {
         count
+      }
+    }
+  }
+`;
+
+export const GET_MALE_LABORS = gql`
+  query GET_MALE_LABORS {
+    registration_namespace {
+      labors_aggregate(where: { gender: { _nilike: "male" } }) {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
+`;
+
+export const GET_FEMALE_LABORS = gql`
+  query GET_FEMALE_LABORS {
+    registration_namespace {
+      labors_aggregate(where: { gender: { _nilike: "female" } }) {
+        aggregate {
+          count
+        }
       }
     }
   }
