@@ -39,6 +39,8 @@ const Dashboard = () => {
     data: femaleData,
   } = useQuery(GET_FEMALE_LABORS);
 
+  const [pieChartData, setPieChartData] = useState(null);
+
   const [barChartData, setBarChartData] = useState({
     labels: barData.map((e) => e.year),
     datasets: [
@@ -52,8 +54,6 @@ const Dashboard = () => {
       },
     ],
   });
-  // const [pieData, setPieData] = useState([]);
-  const [pieChartData, setPieChartData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,14 +76,12 @@ const Dashboard = () => {
             },
           ],
         });
-
-        console.log(fetchedFemaleData)
       } catch (error) {
         // Handle error fetching data
       }
     };
     fetchData();
-  }, []);
+  }, [pieChartData]);
 
   return (
     <>
@@ -177,6 +175,7 @@ const Dashboard = () => {
             </div>
             {/* piechart */}
             <div className=" bg-[#272953] p-2 rounded-md">
+              {femaleLoading || maleLoading}
               {pieChartData && <PieChart pieData={pieChartData} />}
             </div>
           </div>

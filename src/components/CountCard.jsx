@@ -30,3 +30,17 @@ export const CountCardLoader = () => {
     </>
   );
 };
+
+export const PieChartLoader = () => {
+  return (
+    <>
+      <div className="p-4 xl:p-6 mb-4 rounded-md bg-[#272953] flex justify-between w-full md:w-[45%] lg:w-60 xl:w-72 border-t border-gray-700 animate-pulse">
+        <div>
+          <h5 className="bg-gray-500/70 rounded w-8 p-1 mb-3"></h5>
+          <h1 className="rounded bg-[#67b7d1]/70 w-8 py-3"></h1>
+        </div>
+        <div className="my-auto bg-gray-500/70 rounded w-8 p-4"></div>
+      </div>
+    </>
+  );
+};
