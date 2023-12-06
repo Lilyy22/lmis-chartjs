@@ -81,7 +81,7 @@ const Dashboard = () => {
       }
     };
     fetchData();
-  }, [pieChartData]);
+  }, [femaleData, maleData]);
 
   return (
     <>
