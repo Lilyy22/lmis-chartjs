@@ -8,8 +8,6 @@ const PieChart = ({ pieData }) => {
       customCanvasBackgroundColor: {
         color: "lightGreen",
       },
-    },
-    plugins: {
       legend: {
         labels: {
           color: "#C5C6D0", // Change the label color here

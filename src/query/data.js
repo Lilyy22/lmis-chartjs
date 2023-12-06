@@ -38,22 +38,31 @@ export const barData = [
   },
 ];
 
-export const pieData = [
-  {
-    id: 1,
-    year: 2020,
-    sales: 20000,
-  },
-  {
-    id: 2,
-    year: 2021,
-    sales: 30000,
-  },
-];
-
 export const GET_USERS = gql`
   query GET_USERS {
     user_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+export const GET_ROLES = gql`
+  query GET_ROLES {
+    roles_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+export const GET_ADMIN_USERS = gql`
+  query GET_ADMIN_USERS {
+    user_roles_aggregate(
+      where: { role_id: { _eq: "97afd3d1-f0aa-4b38-bed9-94e3fc38101b" } }
+    ) {
       aggregate {
         count
       }
