@@ -70,6 +70,28 @@ export const GET_ADMIN_USERS = gql`
   }
 `;
 
+export const GET_USER_COUNT = gql`
+  query GET_USER_COUNT {
+    users: user_aggregate {
+      aggregate {
+        count
+      }
+    }
+    roles: roles_aggregate {
+      aggregate {
+        count
+      }
+    }
+    admin_users: user_roles_aggregate(
+      where: { role_id: { _eq: "97afd3d1-f0aa-4b38-bed9-94e3fc38101b" } }
+    ) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
 export const GET_ACTIVE_USERS = gql`
   query GET_ACTIVE_USERS($activeDate: timestamptz!) {
     refresh_tokens_aggregate(

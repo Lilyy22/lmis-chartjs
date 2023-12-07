@@ -7,6 +7,7 @@ import {
   GET_USERS,
   barData,
   GET_LABOR_BY_GENDER,
+  GET_USER_COUNT,
 } from "../query/data";
 import { CountCard, CountCardLoader } from "../components/CountCard";
 import PieChart from "../components/PieChart";
@@ -19,16 +20,6 @@ const Dashboard = () => {
   active_date.setDate(current_date.getDate() - 2);
 
   const {
-    loading: usersLoading,
-    error: usersError,
-    data: usersData,
-  } = useQuery(GET_USERS);
-  const {
-    loading: adminUsersLoading,
-    error: adminUsersError,
-    data: adminUsersData,
-  } = useQuery(GET_ADMIN_USERS);
-  const {
     loading: activeUsersLoading,
     error: activeUsersError,
     data: activeUsersData,
@@ -36,15 +27,15 @@ const Dashboard = () => {
     variables: { activeDate: active_date },
   });
   const {
-    loading: rolesLoading,
-    error: rolesError,
-    data: rolesData,
-  } = useQuery(GET_ROLES);
-  const {
     loading: genderLoading,
     error: genderError,
     data: genderData,
   } = useQuery(GET_LABOR_BY_GENDER);
+  const {
+    loading: userCountLoading,
+    error: userCountError,
+    data: userCountData,
+  } = useQuery(GET_USER_COUNT);
 
   const [pieChartData, setPieChartData] = useState(null);
 
@@ -92,10 +83,10 @@ const Dashboard = () => {
 
   return (
     <>
-      {usersError && (
+      {userCountLoading && (
         <div className="text-center py-2 bg-orange-500">
           {" "}
-          {usersError.message}{" "}
+          {userCountLoading.message}{" "}
         </div>
       )}
       <div className="bg-[#0d0a26] h-screen">
@@ -104,12 +95,12 @@ const Dashboard = () => {
         </h1>
         <div className="container m-auto p-8">
           <div className="flex flex-wrap lg:flex-nowrap mb-12 gap-4 xl:gap-8 justify-center">
-            {rolesLoading ? (
+            {userCountLoading ? (
               <CountCardLoader />
             ) : (
               <CountCard
                 subtitle="Roles"
-                count={rolesData?.roles_aggregate?.aggregate?.count}
+                count={userCountData?.roles?.aggregate?.count}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -122,12 +113,12 @@ const Dashboard = () => {
                 </svg>
               </CountCard>
             )}
-            {usersLoading ? (
+            {userCountLoading ? (
               <CountCardLoader />
             ) : (
               <CountCard
                 subtitle="Users"
-                count={usersData?.user_aggregate?.aggregate?.count}
+                count={userCountData?.users?.aggregate?.count}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -160,12 +151,12 @@ const Dashboard = () => {
                 </svg>
               </CountCard>
             )}
-            {adminUsersLoading ? (
+            {userCountLoading ? (
               <CountCardLoader />
             ) : (
               <CountCard
                 subtitle="Admin Users"
-                count={adminUsersData?.user_roles_aggregate?.aggregate?.count}
+                count={userCountData?.admin_users?.aggregate?.count}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
