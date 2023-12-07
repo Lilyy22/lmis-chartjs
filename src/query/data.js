@@ -70,21 +70,29 @@ export const GET_ADMIN_USERS = gql`
   }
 `;
 
-export const GET_MALE_LABORS = gql`
-  query GET_MALE_LABORS {
-    registration_namespace {
+export const GET_ACTIVE_USERS = gql`
+  query GET_ACTIVE_USERS($activeDate: timestamptz!) {
+    refresh_tokens_aggregate(
+      distinct_on: user_id
+      where: { created_at: { _gt: $activeDate } }
+    ) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+export const GET_LABOR_BY_GENDER = gql`
+  query GET_LABOR_BY_GENDER {
+    male: registration_namespace {
       labors_aggregate(where: { gender: { _nilike: "male" } }) {
         aggregate {
           count
         }
       }
     }
-  }
-`;
-
-export const GET_FEMALE_LABORS = gql`
-  query GET_FEMALE_LABORS {
-    registration_namespace {
+    female: registration_namespace {
       labors_aggregate(where: { gender: { _nilike: "female" } }) {
         aggregate {
           count

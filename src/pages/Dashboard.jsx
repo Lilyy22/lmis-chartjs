@@ -2,17 +2,22 @@ import React, { useEffect, useState } from "react";
 import BarChart from "../components/BarChart";
 import {
   GET_ADMIN_USERS,
-  GET_FEMALE_LABORS,
-  GET_MALE_LABORS,
+  GET_ACTIVE_USERS,
   GET_ROLES,
   GET_USERS,
   barData,
+  GET_LABOR_BY_GENDER,
 } from "../query/data";
 import { CountCard, CountCardLoader } from "../components/CountCard";
 import PieChart from "../components/PieChart";
 import { useQuery } from "@apollo/client";
 
 const Dashboard = () => {
+  const current_date = new Date();
+  // Calculate the day before yesterday
+  const active_date = new Date();
+  active_date.setDate(current_date.getDate() - 2);
+
   const {
     loading: usersLoading,
     error: usersError,
@@ -24,20 +29,22 @@ const Dashboard = () => {
     data: adminUsersData,
   } = useQuery(GET_ADMIN_USERS);
   const {
+    loading: activeUsersLoading,
+    error: activeUsersError,
+    data: activeUsersData,
+  } = useQuery(GET_ACTIVE_USERS, {
+    variables: { activeDate: active_date },
+  });
+  const {
     loading: rolesLoading,
     error: rolesError,
     data: rolesData,
   } = useQuery(GET_ROLES);
   const {
-    loading: maleLoading,
-    error: maleError,
-    data: maleData,
-  } = useQuery(GET_MALE_LABORS);
-  const {
-    loading: femaleLoading,
-    error: femaleError,
-    data: femaleData,
-  } = useQuery(GET_FEMALE_LABORS);
+    loading: genderLoading,
+    error: genderError,
+    data: genderData,
+  } = useQuery(GET_LABOR_BY_GENDER);
 
   const [pieChartData, setPieChartData] = useState(null);
 
@@ -58,10 +65,10 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fetchedFemaleData = await femaleData?.registration_namespace
-          ?.labors_aggregate?.aggregate?.count;
-        const fetchedMaleData = await maleData?.registration_namespace
-          ?.labors_aggregate?.aggregate?.count;
+        const fetchedFemaleData =
+          genderData?.female?.labors_aggregate?.aggregate?.count;
+        const fetchedMaleData =
+          genderData?.male?.labors_aggregate?.aggregate?.count;
 
         setPieChartData({
           labels: ["Female", "Male"],
@@ -81,7 +88,7 @@ const Dashboard = () => {
       }
     };
     fetchData();
-  }, [femaleData, maleData]);
+  }, [genderData]);
 
   return (
     <>
@@ -133,10 +140,15 @@ const Dashboard = () => {
                 </svg>
               </CountCard>
             )}
-            {usersLoading ? (
+            {activeUsersLoading ? (
               <CountCardLoader />
             ) : (
-              <CountCard subtitle="Active Users" count="142">
+              <CountCard
+                subtitle="Active Users"
+                count={
+                  activeUsersData?.refresh_tokens_aggregate?.aggregate?.count
+                }
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="26"
@@ -175,8 +187,28 @@ const Dashboard = () => {
             </div>
             {/* piechart */}
             <div className=" bg-[#272953] p-2 rounded-md">
-              {femaleLoading || maleLoading}
+              {/* {gender} */}
               {pieChartData && <PieChart pieData={pieChartData} />}
+            </div>
+
+            <div className="bg-[#272953] p-4 rounded-md w-full lg:w-[23%]">
+              <h2 className="font-bold text-gray-400">Locked out users</h2>
+
+              <div className="flex justify-between my-4 py-2 border-b border-gray-700">
+                <h2 className="font-bold text-gray-300">
+                  {" "}
+                  &#8901; Five times trial
+                </h2>
+                <h1 className="text-2xl font-bold text-[#67b7d1]">12</h1>
+              </div>
+
+              <div className="flex justify-between my-4 py-2 border-b border-gray-700">
+                <h2 className="font-bold text-gray-300">
+                  {" "}
+                  &#8901; Ten times trial
+                </h2>
+                <h1 className="text-2xl font-bold text-[#67b7d1]">12</h1>
+              </div>
             </div>
           </div>
         </div>
