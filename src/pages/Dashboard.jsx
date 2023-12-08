@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import BarChart from "../components/BarChart";
 import {
-  GET_ADMIN_USERS,
   GET_ACTIVE_USERS,
-  GET_ROLES,
-  GET_USERS,
   barData,
   GET_LABOR_BY_GENDER,
   GET_USER_COUNT,
+  GET_LOCKED_OUT_USERS,
 } from "../query/data";
 import { CountCard, CountCardLoader } from "../components/CountCard";
 import PieChart from "../components/PieChart";
@@ -18,13 +16,14 @@ const Dashboard = () => {
   // Calculate the day before yesterday
   const active_date = new Date();
   active_date.setDate(current_date.getDate() - 2);
-
+  // Format active_date to "yyyy-mm-dd"
+  const formattedActiveDate = active_date.toISOString().split("T")[0];
   const {
     loading: activeUsersLoading,
     error: activeUsersError,
     data: activeUsersData,
   } = useQuery(GET_ACTIVE_USERS, {
-    variables: { activeDate: active_date },
+    variables: { activeDate: formattedActiveDate },
   });
   const {
     loading: genderLoading,
@@ -36,6 +35,11 @@ const Dashboard = () => {
     error: userCountError,
     data: userCountData,
   } = useQuery(GET_USER_COUNT);
+  const {
+    loading: lockedOutUsersLoading,
+    error: lockedOutUsersError,
+    data: lockedOutUsersData,
+  } = useQuery(GET_LOCKED_OUT_USERS);
 
   const [pieChartData, setPieChartData] = useState(null);
 
@@ -100,7 +104,7 @@ const Dashboard = () => {
             ) : (
               <CountCard
                 subtitle="Roles"
-                count={userCountData?.roles?.aggregate?.count}
+                count={userCountData?.roles?.aggregate?.count?.toLocaleString()}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -118,7 +122,7 @@ const Dashboard = () => {
             ) : (
               <CountCard
                 subtitle="Users"
-                count={userCountData?.users?.aggregate?.count}
+                count={userCountData?.users?.aggregate?.count?.toLocaleString()}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -136,9 +140,7 @@ const Dashboard = () => {
             ) : (
               <CountCard
                 subtitle="Active Users"
-                count={
-                  activeUsersData?.refresh_tokens_aggregate?.aggregate?.count
-                }
+                count={activeUsersData?.refresh_tokens_aggregate?.aggregate?.count?.toLocaleString()}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -156,7 +158,7 @@ const Dashboard = () => {
             ) : (
               <CountCard
                 subtitle="Admin Users"
-                count={userCountData?.admin_users?.aggregate?.count}
+                count={userCountData?.admin_users?.aggregate?.count?.toLocaleString()}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -188,17 +190,22 @@ const Dashboard = () => {
               <div className="flex justify-between my-4 py-2 border-b border-gray-700">
                 <h2 className="font-bold text-gray-300">
                   {" "}
-                  &#8901; Five times trial
+                  &#8901; Five or more trial
                 </h2>
-                <h1 className="text-2xl font-bold text-[#67b7d1]">12</h1>
+                <h1 className="text-2xl font-bold text-[#67b7d1]">
+                  {lockedOutUsersData?.five?.aggregate?.count?.toLocaleString()}
+                </h1>
               </div>
 
               <div className="flex justify-between my-4 py-2 border-b border-gray-700">
                 <h2 className="font-bold text-gray-300">
                   {" "}
-                  &#8901; Ten times trial
+                  &#8901; Ten or more trial
                 </h2>
-                <h1 className="text-2xl font-bold text-[#67b7d1]">12</h1>
+                <h1 className="text-2xl font-bold text-[#67b7d1]">
+                  {" "}
+                  {lockedOutUsersData?.ten?.aggregate?.count?.toLocaleString()}
+                </h1>
               </div>
             </div>
           </div>
