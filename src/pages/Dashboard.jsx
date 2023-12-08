@@ -87,13 +87,13 @@ const Dashboard = () => {
 
   return (
     <>
-      {userCountLoading && (
+      {userCountError && (
         <div className="text-center py-2 bg-orange-500">
           {" "}
-          {userCountLoading.message}{" "}
+          {userCountError?.message}{" "}
         </div>
       )}
-      <div className="bg-[#0d0a26] h-screen">
+      <div className="bg-[#0d0a26] xl:pb-2 lg:h-screen">
         <h1 className="text-center text-gray-50 text-2xl font-bold pt-12 mb-4">
           LMIS Backend Dashboard
         </h1>
@@ -184,7 +184,7 @@ const Dashboard = () => {
               {pieChartData && <PieChart pieData={pieChartData} />}
             </div>
 
-            <div className="bg-[#272953] p-4 rounded-md w-full lg:w-[23%]">
+            <div className="bg-[#272953] p-4 rounded-md w-full xl:w-[23%]">
               <h2 className="font-bold text-gray-400">Locked out users</h2>
 
               <div className="flex justify-between my-4 py-2 border-b border-gray-700">
