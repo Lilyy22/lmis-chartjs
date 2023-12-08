@@ -12,8 +12,8 @@ const Auth = () => {
     try {
       const { data } = await signIn({ variables: { secret: password } });
       const { access_token, refresh_token } = data.signIn.tokens;
-      localStorage.setItem("access_token", access_token);
-      localStorage.setItem("refresh_token", refresh_token);
+      sessionStorage.setItem("access_token", access_token);
+      sessionStorage.setItem("refresh_token", refresh_token);
       navigate("dashboard");
     } catch (error) {}
     setPassword("");
