@@ -18,19 +18,20 @@ const httpLink = createHttpLink({
 });
 
 const authLink = setContext((_, { headers }) => {
-  // get the authentication token from local storage if it exists
-  const token = localStorage.getItem("access_token");
-  // return the headers to the context so httpLink can read them
-  if (token) {
+  // get the authentication token from session storage if it exists
+  const refresh_token = sessionStorage.getItem("refresh_token");
+  const access_token = sessionStorage.getItem("access_token");
+  if (access_token) {
     return {
+      // return the headers to the context
       headers: {
         ...headers,
-        Authorization: `Bearer ${token}`,
+        Authorization: access_token ? `Bearer ${access_token}` : "",
         "x-hasura-role": "admin",
       },
     };
   } else {
-    return;
+    return "";
   }
 });
 
@@ -41,9 +42,9 @@ const client = new ApolloClient({
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <ApolloProvider client={client}>
-    <BrowserRouter>
+  <BrowserRouter>
+    <ApolloProvider client={client}>
       <App />
-    </BrowserRouter>
-  </ApolloProvider>
+    </ApolloProvider>
+  </BrowserRouter>
 );

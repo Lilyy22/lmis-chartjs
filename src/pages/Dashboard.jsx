@@ -18,26 +18,19 @@ const Dashboard = () => {
   active_date.setDate(current_date.getDate() - 2);
   // Format active_date to "yyyy-mm-dd"
   const formattedActiveDate = active_date.toISOString().split("T")[0];
-  const {
-    loading: activeUsersLoading,
-    error: activeUsersError,
-    data: activeUsersData,
-  } = useQuery(GET_ACTIVE_USERS, {
-    variables: { activeDate: formattedActiveDate },
-  });
-  const {
-    loading: genderLoading,
-    error: genderError,
-    data: genderData,
-  } = useQuery(GET_LABOR_BY_GENDER);
+  const { loading: activeUsersLoading, data: activeUsersData } = useQuery(
+    GET_ACTIVE_USERS,
+    {
+      variables: { activeDate: formattedActiveDate },
+    }
+  );
+  const { data: genderData } = useQuery(GET_LABOR_BY_GENDER);
   const {
     loading: userCountLoading,
     error: userCountError,
     data: userCountData,
   } = useQuery(GET_USER_COUNT);
   const {
-    loading: lockedOutUsersLoading,
-    error: lockedOutUsersError,
     data: lockedOutUsersData,
   } = useQuery(GET_LOCKED_OUT_USERS);
 
