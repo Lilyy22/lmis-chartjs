@@ -13,7 +13,6 @@ import { useQuery } from "@apollo/client";
 import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
 
-
 const Dashboard = () => {
   const navigate = useNavigate();
   const current_date = new Date();
@@ -54,7 +53,7 @@ const Dashboard = () => {
 
   const handleLogOut = () => {
     sessionStorage.clear();
-    navigate("/")
+    navigate("/");
   };
 
   useEffect(() => {
@@ -88,7 +87,7 @@ const Dashboard = () => {
   return (
     <>
       {userCountError && (
-        <div className="text-center py-2 bg-orange-500 absolute top-0 w-full z-10">
+        <div className="text-center py-2 bg-orange-500">
           {" "}
           {userCountError?.message}{" "}
         </div>
