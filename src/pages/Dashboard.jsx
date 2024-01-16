@@ -10,8 +10,12 @@ import {
 import { CountCard, CountCardLoader } from "../components/CountCard";
 import PieChart from "../components/PieChart";
 import { useQuery } from "@apollo/client";
+import Header from "../components/Header";
+import { useNavigate } from "react-router-dom";
+
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const current_date = new Date();
   // Calculate the day before yesterday
   const active_date = new Date();
@@ -30,9 +34,7 @@ const Dashboard = () => {
     error: userCountError,
     data: userCountData,
   } = useQuery(GET_USER_COUNT);
-  const {
-    data: lockedOutUsersData,
-  } = useQuery(GET_LOCKED_OUT_USERS);
+  const { data: lockedOutUsersData } = useQuery(GET_LOCKED_OUT_USERS);
 
   const [pieChartData, setPieChartData] = useState(null);
 
@@ -49,6 +51,11 @@ const Dashboard = () => {
       },
     ],
   });
+
+  const handleLogOut = () => {
+    sessionStorage.clear();
+    navigate("/")
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,11 +88,14 @@ const Dashboard = () => {
   return (
     <>
       {userCountError && (
-        <div className="text-center py-2 bg-orange-500">
+        <div className="text-center py-2 bg-orange-500 absolute top-0 w-full z-10">
           {" "}
           {userCountError?.message}{" "}
         </div>
       )}
+
+      <Header handleLogOut={handleLogOut} />
+
       <div className="bg-[#0d0a26] xl:pb-2 lg:h-screen">
         <h1 className="text-center text-gray-50 text-2xl font-bold pt-12 mb-4">
           LMIS Backend Dashboard
